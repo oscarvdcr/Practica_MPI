@@ -1,0 +1,55 @@
+Datos Entrada:
+	Arboles: 35.
+	Arbol 1-> (8,3) Coste:5, Long:4.
+	Arbol 2-> (1,0) Coste:8, Long:13.
+	Arbol 3-> (2,4) Coste:13, Long:2.
+	Arbol 4-> (2,10) Coste:7, Long:10.
+	Arbol 5-> (4,1) Coste:5, Long:5.
+	Arbol 6-> (5,6) Coste:4, Long:5.
+	Arbol 7-> (2,3) Coste:2, Long:8.
+	Arbol 8-> (-1,0) Coste:18, Long:3.
+	Arbol 9-> (-7,4) Coste:3, Long:2.
+	Arbol 10-> (2,1) Coste:7, Long:1.
+	Arbol 11-> (6,2) Coste:12, Long:13.
+	Arbol 12-> (2,5) Coste:14, Long:15.
+	Arbol 13-> (9,-2) Coste:9, Long:8.
+	Arbol 14-> (2,4) Coste:13, Long:2.
+	Arbol 15-> (2,-1) Coste:7, Long:10.
+	Arbol 16-> (4,1) Coste:12, Long:3.
+	Arbol 17-> (-3,6) Coste:14, Long:5.
+	Arbol 18-> (2,-3) Coste:9, Long:8.
+	Arbol 19-> (1,0) Coste:18, Long:6.
+	Arbol 20-> (9,4) Coste:3, Long:2.
+	Arbol 21-> (2,1) Coste:7, Long:4.
+	Arbol 22-> (-2,2) Coste:22, Long:9.
+	Arbol 23-> (3,5) Coste:4, Long:6.
+	Arbol 24-> (2,-3) Coste:9, Long:8.
+	Arbol 25-> (1,1) Coste:10, Long:10.
+	Arbol 26-> (2,2) Coste:20, Long:10.
+	Arbol 27-> (7,8) Coste:10, Long:5.
+	Arbol 28-> (-3,2) Coste:8, Long:15.
+	Arbol 29-> (12,12) Coste:5, Long:4.
+	Arbol 30-> (-10,7) Coste:7, Long:14.
+	Arbol 31-> (10,1) Coste:5, Long:5.
+	Arbol 32-> (5,6) Coste:14, Long:5.
+	Arbol 33-> (6,2) Coste:2, Long:5.
+	Arbol 34-> (-1,10) Coste:8, Long:3.
+	Arbol 35-> (7,5) Coste:3, Long:2.
+
+[CalcularCercaOptimaBrandBound] Evaluación Combinaciones posibles:
+[         6] OptimoParcial         63-> Coste 34,  6 Arbol/es talado/s: 30 29 31 20 13 1
+[       132] OptimoParcial     262431-> Coste 33,  7 Arbol/es talado/s: 30 29 31 20 13 33 7
+[     21745] OptimoParcial     271631-> Coste 32,  8 Arbol/es talado/s: 30 29 31 20 33 6 23 7
+[     25898] OptimoParcial     278799-> Coste 31,  7 Arbol/es talado/s: 30 29 31 20 33 4 7
+[     56846] OptimoParcial  134479887-> Coste 30,  6 Arbol/es talado/s: 30 29 31 20 7 2
+[   2193449] OptimoParcial  134488075-> Coste 29,  6 Arbol/es talado/s: 30 29 20 23 7 2
+[   2421559] OptimoParcial  134481155-> Coste 28,  6 Arbol/es talado/s: 30 29 33 6 7 2
+[   2439632] OptimoParcial     286979-> Coste 27,  6 Arbol/es talado/s: 30 29 33 23 4 7
+	Optimo 4464899-> Coste 27, 6 Arboles talados:30 29 33 23 7 15
+			 	Id: 30 	Coord: (-10,7) 	Cost:   7 	Long:  14
+			 	Id: 29 	Coord: (12,12) 	Cost:   5 	Long:   4
+			 	Id: 33 	Coord: (6,2) 	Cost:   2 	Long:   5
+			 	Id: 23 	Coord: (3,5) 	Cost:   4 	Long:   6
+			 	Id:  7 	Coord: (2,3) 	Cost:   2 	Long:   8
+			 	Id: 15 	Coord: (2,-1) 	Cost:   7 	Long:  10
+[CalcularCercaOptimaBrandBound] Tiempo requerido cálculo cerca optima: 869.465 segs. 1830779095 combinaciones evaluadas

@@ -1,0 +1,3 @@
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Computacion_Distribuida_y_Aplicaciones_2023-24/Practicas/Practica_MPI/VersionSecuencial/CalcArboles/cmake-build-debug/CMakeFiles/CalcCerca.dir
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Computacion_Distribuida_y_Aplicaciones_2023-24/Practicas/Practica_MPI/VersionSecuencial/CalcArboles/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Computacion_Distribuida_y_Aplicaciones_2023-24/Practicas/Practica_MPI/VersionSecuencial/CalcArboles/cmake-build-debug/CMakeFiles/rebuild_cache.dir

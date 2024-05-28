@@ -1,0 +1,18 @@
+Datos Entrada:
+	Arboles: 3.
+	Arbol 1-> (3,0) Coste:10, Long:2.
+	Arbol 2-> (5,5) Coste:20, Long:25.
+	Arbol 3-> (7,-3) Coste:30, Long:32.
+
+[CalcularCercaOptimaExhaustiva] Evaluación Combinaciones posibles:
+[         2] OptimoParcial          2-> Coste 20,  1 Arbol/es talado/s: 2
+	Optimo 2-> Coste 20, 1 Arboles talados:2
+			 	Id:  2 	Coord: (5,5) 	Cost:  20 	Long:  25
+[CalcularCercaOptimaExhaustiva] Tiempo requerido cálculo cerca optima: 0.000 segs. 8 combinaciones evaluadas
+
+[CalcularCercaOptimaBrandBound] Evaluación Combinaciones posibles:
+[         1] OptimoParcial          3-> Coste 30,  2 Arbol/es talado/s: 1 2
+[         3] OptimoParcial          2-> Coste 20,  1 Arbol/es talado/s: 2
+	Optimo 2-> Coste 20, 1 Arboles talados:2
+			 	Id:  2 	Coord: (5,5) 	Cost:  20 	Long:  25
+[CalcularCercaOptimaBrandBound] Tiempo requerido cálculo cerca optima: 0.000 segs. 5 combinaciones evaluadas

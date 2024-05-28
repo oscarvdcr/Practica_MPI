@@ -1,0 +1,49 @@
+Datos Entrada:
+	Arboles: 15.
+	Arbol 1-> (8,3) Coste:5, Long:4.
+	Arbol 2-> (1,0) Coste:8, Long:13.
+	Arbol 3-> (2,4) Coste:13, Long:2.
+	Arbol 4-> (2,10) Coste:7, Long:10.
+	Arbol 5-> (4,1) Coste:5, Long:5.
+	Arbol 6-> (5,6) Coste:4, Long:5.
+	Arbol 7-> (2,3) Coste:2, Long:8.
+	Arbol 8-> (-1,0) Coste:18, Long:3.
+	Arbol 9-> (-7,4) Coste:3, Long:2.
+	Arbol 10-> (6,2) Coste:12, Long:13.
+	Arbol 11-> (2,5) Coste:14, Long:15.
+	Arbol 12-> (9,-2) Coste:9, Long:8.
+	Arbol 13-> (2,4) Coste:13, Long:2.
+	Arbol 14-> (2,-1) Coste:7, Long:10.
+	Arbol 15-> (4,1) Coste:12, Long:3.
+
+[CalcularCercaOptimaExhaustiva] Evaluación Combinaciones posibles:
+[        15] OptimoParcial         15-> Coste 29,  4 Arbol/es talado/s: 9 12 1 10
+[        87] OptimoParcial         87-> Coste 28,  5 Arbol/es talado/s: 9 12 1 6 4
+[       196] OptimoParcial        196-> Coste 26,  3 Arbol/es talado/s: 1 4 11
+[      1078] OptimoParcial       1078-> Coste 25,  5 Arbol/es talado/s: 12 1 6 5 7
+[      1094] OptimoParcial       1094-> Coste 23,  4 Arbol/es talado/s: 12 1 4 7
+[      3140] OptimoParcial       3140-> Coste 21,  4 Arbol/es talado/s: 1 4 7 14
+[      3152] OptimoParcial       3152-> Coste 20,  4 Arbol/es talado/s: 6 4 7 14
+[      5140] OptimoParcial       5140-> Coste 19,  4 Arbol/es talado/s: 1 6 7 2
+	Optimo 5140-> Coste 19, 4 Arboles talados:1 6 7 2
+			 	Id:  1 	Coord: (8,3) 	Cost:   5 	Long:   4
+			 	Id:  6 	Coord: (5,6) 	Cost:   4 	Long:   5
+			 	Id:  7 	Coord: (2,3) 	Cost:   2 	Long:   8
+			 	Id:  2 	Coord: (1,0) 	Cost:   8 	Long:  13
+[CalcularCercaOptimaExhaustiva] Tiempo requerido cálculo cerca optima: 0.028 segs. 32768 combinaciones evaluadas
+
+[CalcularCercaOptimaBrandBound] Evaluación Combinaciones posibles:
+[         3] OptimoParcial         15-> Coste 29,  4 Arbol/es talado/s: 9 12 1 10
+[        38] OptimoParcial         87-> Coste 28,  5 Arbol/es talado/s: 9 12 1 6 4
+[       149] OptimoParcial       1095-> Coste 26,  5 Arbol/es talado/s: 9 12 1 4 7
+[       408] OptimoParcial       1107-> Coste 25,  5 Arbol/es talado/s: 9 12 6 4 7
+[      1656] OptimoParcial       3141-> Coste 24,  5 Arbol/es talado/s: 9 1 4 7 14
+[      2522] OptimoParcial       3153-> Coste 23,  5 Arbol/es talado/s: 9 6 4 7 14
+[      3057] OptimoParcial       5185-> Coste 20,  4 Arbol/es talado/s: 9 4 7 2
+[      4647] OptimoParcial       5140-> Coste 19,  4 Arbol/es talado/s: 1 6 7 2
+	Optimo 5140-> Coste 19, 4 Arboles talados:1 6 7 2
+			 	Id:  1 	Coord: (8,3) 	Cost:   5 	Long:   4
+			 	Id:  6 	Coord: (5,6) 	Cost:   4 	Long:   5
+			 	Id:  7 	Coord: (2,3) 	Cost:   2 	Long:   8
+			 	Id:  2 	Coord: (1,0) 	Cost:   8 	Long:  13
+[CalcularCercaOptimaBrandBound] Tiempo requerido cálculo cerca optima: 0.003 segs. 6300 combinaciones evaluadas
