@@ -8,6 +8,7 @@
 #include "ConvexHull.h"
 #include "Utils.h"
 #include <linux/time.h>
+#include <mpi.h>
 
 // Variables Globales
 struct timespec start, finish;
@@ -48,6 +49,9 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 	    return true;
 }
 
+void OrdenarArbresMPI(){
+
+}
 
 // Método para ordenar los árboles de menor a mayor por la coordendas (primero por x y despues por y)
 void OrdenarArboles()
