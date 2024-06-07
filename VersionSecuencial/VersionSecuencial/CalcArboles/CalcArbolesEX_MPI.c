@@ -10,6 +10,8 @@
 #include <linux/time.h>
 #include <mpi.h>
 
+
+
 // Variables Globales
 struct timespec start, finish;
 double elapsed_std;
@@ -50,7 +52,7 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 }
 
 void OrdenarArbresMPI(){
-
+    
 }
 
 // Método para ordenar los árboles de menor a mayor por la coordendas (primero por x y despues por y)

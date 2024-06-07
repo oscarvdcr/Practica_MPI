@@ -7,6 +7,7 @@
 #include "CalcArbolesEX.h"
 #include "ConvexHull.h"
 #include "Utils.h"
+#include <linux/time.h>
 
 // Variables Globales
 struct timespec start, finish;
