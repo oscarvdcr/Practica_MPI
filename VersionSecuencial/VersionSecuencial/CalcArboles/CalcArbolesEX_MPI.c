@@ -104,8 +104,8 @@ int RepartirTrabajo() {
     char buff[1000];
     TSolucionArboles Optimo;
 
-    MPI_Init()
-    MPI_Comm_size(MPI_Comm comm, int &size);
+    MPI_Init(NULL, NULL);
+    MPI_Comm_size(MPI_COMM comm, int &size);
     MPI_Comm_rank(MPI_Comm comm, int &rank); 
     long trabajos = MaxCombinaciones/size;
 
