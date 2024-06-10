@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -9,8 +10,6 @@
 #include "Utils.h"
 #include <linux/time.h>
 #include <mpi.h>
-
-
 
 // Variables Globales
 struct timespec start, finish;
@@ -28,6 +27,8 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 
 	/* Cálculo Máximo Combinaciones */
 	MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
+
+
 
 	// Ordenar Arboles por segun coordenadas crecientes de x,y
 	OrdenarArboles();
@@ -49,10 +50,6 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
         return false;
     else
 	    return true;
-}
-
-void OrdenarArbresMPI(){
-    
 }
 
 // Método para ordenar los árboles de menor a mayor por la coordendas (primero por x y despues por y)
@@ -95,9 +92,56 @@ void OrdenarArboles()
 	}
 }
 
+struct {
+    TSolucionArboles Optimo;
+    int coste; 
+} Resultados;
+
+int RepartirTrabajo() {
+    TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
+    int rank, size, posicion;
+    char buff[1000];
+    TSolucionArboles Optimo;
+
+    MPI_Init()
+    MPI_Comm_size(MPI_Comm comm, int &size);
+    MPI_Comm_rank(MPI_Comm comm, int &rank); 
+    long trabajos = MaxCombinaciones/size;
+
+    TCombinacionArboles inicio = rank*MaxCombinaciones;
+    TCombinacionArboles final = (rank+1)*MaxCombinaciones-1;
+
+    Optimo = CalcularCombinacionOptima(inicio, final);
+    
+    if(rank == 0) {
+        int CostesSoluciones[size];
+        TCombinacionArboles CombinacionesSoluciones[size];
+        
+        MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, &status);//TODO: do it with structs
+        posicion = 0;
+        for(int i = 0; i < size; i++) {
+            MPI_Unpack(buff, 1000, &posicion, &CostesSoluciones[i], size, MPI_INT, MPI_COMM_WORLD);
+            MPI_Unpack(buff, 1000, &posicion, &CombinacionesSoluciones[i], size, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
+        }
+        for(int i = 0; i < size; i++) {
+            
+        }
+
+    } else {
+        posicion = 0;
+        MPI_Pack(&Optimo.Coste);
+        MPI_Pack(&Optimo.Combinacion);
+
+        MPI_Send(buff, posicion, MPI_PACKED, 1, 0, MPI_COMM_WORLD); //TODO: do it with structs
+    }
+
+    MPI_Finalize();
+    return Optimo.Coste;
+}
+
 
 // Calcula la combinación óptima entre el rango de combinaciones PrimeraCombinacion-UltimaCombinacion.
-int CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinacionArboles UltimaCombinacion)
+TSolucionArboles CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinacionArboles UltimaCombinacion)
 {
     TListaArboles listaArbolesTalados;
 
@@ -114,7 +158,7 @@ int CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinaci
     MostrarInfoArbolesLista(Optimo.ArbolesTalados);
     printf("\n");
 
-	return Optimo.Coste;
+	return Optimo;
 }
 
 
