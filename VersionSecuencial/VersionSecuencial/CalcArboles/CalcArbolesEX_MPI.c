@@ -99,7 +99,8 @@ struct {
 
 int RepartirTrabajo() {
     TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
-    int rank, size, posicion;
+    int rank, size, posicion, costeOptimo = 9999999, coste;
+    TCombinacionArboles mejorCombinacion, patata;
     char buff[1000];
     TSolucionArboles Optimo;
 
@@ -114,16 +115,18 @@ int RepartirTrabajo() {
     Optimo = CalcularCombinacionOptima(inicio, final);
     
     if(rank == 0) {
-        int CostesSoluciones[size];
-        TCombinacionArboles CombinacionesSoluciones[size];
         
         MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, &status);//TODO: do it with structs
         posicion = 0;
         for(int i = 0; i < size; i++) {
-            MPI_Unpack(buff, 1000, &posicion, &CostesSoluciones[i], size, MPI_INT, MPI_COMM_WORLD);
-            MPI_Unpack(buff, 1000, &posicion, &CombinacionesSoluciones[i], size, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
-        }
-        for(int i = 0; i < size; i++) {
+            MPI_Unpack(buff, 1000, &posicion, &coste, 1, MPI_INT, MPI_COMM_WORLD);
+            MPI_Unpack(buff, 1000, &posicion, &patata, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
+
+            if (coste < costeOptimo)
+            {
+                costeOptimo = coste;
+                mejorCombinacion = patata;
+            }
             
         }
 
@@ -136,7 +139,7 @@ int RepartirTrabajo() {
     }
 
     MPI_Finalize();
-    return Optimo.Coste;
+    return costeOptimo;
 }
 
 
