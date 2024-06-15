@@ -103,8 +103,8 @@ int RepartirTrabajo() {
 	MPI_Comm_size( MPI_COMM_WORLD, &size ); 
     long trabajos = MaxCombinaciones/size;
 
-    TCombinacionArboles inicio = rank*MaxCombinaciones;
-    TCombinacionArboles final = (rank+1)*MaxCombinaciones-1;
+    TCombinacionArboles inicio = rank*trabajos;
+    TCombinacionArboles final = ((rank+1)*trabajos)-1;
 
     int test = CalcularCombinacionOptima(inicio, final);
     printf("%d", test);

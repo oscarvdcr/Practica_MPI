@@ -3,7 +3,7 @@ project(CalcCerca C)
 
 set(CMAKE_C_STANDARD 99)
 
-set(CMAKE_C_FLAGS -m64)
+set(CMAKE_C_FLAGS -m64 -lm)
 
 set(SOURCES_FILES CalcArbolesEX.c CalcArbolesBB.c Arbol.c ConvexHull.c Solucion.c Utils.c )
 set(HEADER_FILES  CalcArbolesEX.h CalcArbolesBB.h Arbol.h ConvexHull.h Solucion.h Utils.h CalcCerca.h )

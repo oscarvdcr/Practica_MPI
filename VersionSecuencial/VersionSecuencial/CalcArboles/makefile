@@ -6,10 +6,10 @@
 #
 
 # define the C compiler to use
-CC = gcc
+CC = mpicc
 
 # define any compile-time flags
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g 
 
 # define any directories containing header files other than /usr/include
 INCLUDES = 
@@ -25,7 +25,7 @@ LFLAGS =
 LIBS = -lm
 
 # define the C source files
-SRCS = Arbol.c  CalcArbolesBB.c  CalcArbolesEX.c  CalcCerca.c  ConvexHull.c  Solucion.c  Utils.c
+SRCS = Arbol.c  CalcArbolesBB.c CalcCerca.c  ConvexHull.c  Solucion.c  Utils.c CalcArbolesEX_MPI.c
 
 # define the C object files 
 #
@@ -38,7 +38,7 @@ SRCS = Arbol.c  CalcArbolesBB.c  CalcArbolesEX.c  CalcCerca.c  ConvexHull.c  Sol
 OBJS = $(SRCS:.c=.o)
 
 # define the executable file 
-MAIN = CalcCerca
+MAIN = CalcCercaMPI
 
 #
 # The following part of the makefile is generic; it can be used to 
