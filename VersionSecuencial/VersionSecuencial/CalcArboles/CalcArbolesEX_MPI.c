@@ -20,14 +20,7 @@ TSolucionArboles Optimo;
 // Calcular cerca óptima mediante el método exhaustivo
 bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 {
-	TCombinacionArboles MaxCombinaciones;
-
     clock_gettime(CLOCK_MONOTONIC, &start);
-
-	/* Cálculo Máximo Combinaciones */
-	MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
-
-
 
 	// Ordenar Arboles por segun coordenadas crecientes de x,y
 	OrdenarArboles();
@@ -35,7 +28,7 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 	/* Cálculo óptimo */
 	Optimo.ArbolesTalados.NumArboles = 0;
 	Optimo.Coste = DMaximoCoste;
-	int coste = CalcularCombinacionOptima(1, MaxCombinaciones);
+	int coste = RepartirTrabajo();
 
     clock_gettime(CLOCK_MONOTONIC, &finish);
     elapsed_std = (finish.tv_sec - start.tv_sec);
@@ -93,48 +86,57 @@ void OrdenarArboles()
 
 int RepartirTrabajo() {
     TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
-    int rank, size, posicion, costeOptimo = 9999999, coste;
-    TCombinacionArboles mejorCombinacion, patata;
+    int rank, size, posicion, costeOptimo, coste;
+    TCombinacionArboles mejorCombinacion, combinacion;
     char buff[1000];
-    TSolucionArboles Optimo;
 
     MPI_Init(NULL, NULL);
     MPI_Comm_rank( MPI_COMM_WORLD, &rank ); 
-	MPI_Comm_size( MPI_COMM_WORLD, &size ); 
+	MPI_Comm_size( MPI_COMM_WORLD, &size );
+     
     long trabajos = MaxCombinaciones/size;
 
     TCombinacionArboles inicio = rank*trabajos;
     TCombinacionArboles final = ((rank+1)*trabajos)-1;
 
-    int test = CalcularCombinacionOptima(inicio, final);
-    printf("%d", test);
-    /*
+    costeOptimo = CalcularCombinacionOptima(inicio, final); // Optimo.Coste
+    //printf("[Rank %d] %d | %d \n %s", &rank, &costeOptimo, &Optimo.Coste, &Optimo.Combinacion);
+    
     if(rank == 0) {
-        
-        MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, &status);//TODO: do it with structs
+        //printf("[IF] %d", rank);
+
+        costeOptimo = Optimo.Coste;
+        //mejorCombinacion = Optimo.Combinacion;
+
+        MPI_Status status;
+
+        MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, MPI_COMM_WORLD, &status);//TODO: do it with structs
+
         posicion = 0;
         for(int i = 0; i < size; i++) {
             MPI_Unpack(buff, 1000, &posicion, &coste, 1, MPI_INT, MPI_COMM_WORLD);
-            MPI_Unpack(buff, 1000, &posicion, &patata, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
+            //MPI_Unpack(buff, 1000, &posicion, &combinacion, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
 
             if (coste < costeOptimo)
             {
                 costeOptimo = coste;
-                mejorCombinacion = patata;
+                //mejorCombinacion = combinacion;
             }
-            
         }
-
     } else {
-        posicion = 0;
-        MPI_Pack(&Optimo.Coste);
-        MPI_Pack(&Optimo.Combinacion);
+        //printf("[Rank %d] Sending...", rank);
 
+        posicion = 0;
+        MPI_Pack(&Optimo.Coste, 1, MPI_INT, buff, 110, &posicion, MPI_COMM_WORLD);
+        //MPI_Pack(&Optimo.Combinacion);
         MPI_Send(buff, posicion, MPI_PACKED, 1, 0, MPI_COMM_WORLD); //TODO: do it with structs
-    }*/
+    }
+
+    Optimo.Coste = costeOptimo;
+    //Optimo.Combinacion = mejorCombinacion;
 
     MPI_Finalize();
-    return test;
+    return Optimo.Coste;
 }
 
 
