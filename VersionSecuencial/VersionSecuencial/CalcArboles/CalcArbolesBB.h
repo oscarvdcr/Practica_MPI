@@ -14,7 +14,7 @@
 int CalcularCercaOptimaBrandBound(PtrSolucionArboles solucion);
 int CalcularCercaOptimaBB(int arbol, PtrSolucionArboles solucion);
 int CalcularCosteCerca2(PtrSolucionArboles solucion);
-PtrSolucionArboles AñadirArbolSolucion(PtrSolucionArboles solucion, int arbol);
+PtrSolucionArboles AnyadirArbolSolucion(PtrSolucionArboles solucion, int arbol);
 void CortarArbolCombinacion(PtrCombinacionArboles combinacion, int arbol);
 
 

@@ -69,7 +69,7 @@ int CalcularCercaOptimaBB(int a, PtrSolucionArboles solucion)
         return solucion->Coste;
 
     // Solución cortando arbol a
-    PtrSolucionArboles solucion_con_arbol = AñadirArbolSolucion(solucion, a);
+    PtrSolucionArboles solucion_con_arbol = AnyadirArbolSolucion(solucion, a);
     int coste_con_arbol = CalcularCercaOptimaBB(a+1, solucion_con_arbol);
 
     // Solución sin cortar arbol a
@@ -88,7 +88,7 @@ int CalcularCercaOptimaBB(int a, PtrSolucionArboles solucion)
 }
 
 // Método para incluir un árbol talado en una solución
-PtrSolucionArboles AñadirArbolSolucion(PtrSolucionArboles solucion, int arbol)
+PtrSolucionArboles AnyadirArbolSolucion(PtrSolucionArboles solucion, int arbol)
 {
     PtrSolucionArboles new_sol = malloc(sizeof(TSolucionArboles));
     if (new_sol==NULL)
@@ -96,7 +96,7 @@ PtrSolucionArboles AñadirArbolSolucion(PtrSolucionArboles solucion, int arbol)
 
     memcpy(new_sol,solucion,sizeof(TSolucionArboles));
 
-    // Añadimos el árbol a la combinación de la solución.
+    // Anyadimos el árbol a la combinación de la solución.
     CortarArbolCombinacion(&(new_sol->Combinacion), arbol);
     new_sol->ArbolesTalados.NumArboles++;
 

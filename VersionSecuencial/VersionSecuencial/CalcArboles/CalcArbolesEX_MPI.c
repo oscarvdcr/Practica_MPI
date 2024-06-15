@@ -8,7 +8,6 @@
 #include "CalcArbolesEX.h"
 #include "ConvexHull.h"
 #include "Utils.h"
-#include <linux/time.h>
 #include <mpi.h>
 
 // Variables Globales
@@ -92,11 +91,6 @@ void OrdenarArboles()
 	}
 }
 
-struct {
-    TSolucionArboles Optimo;
-    int coste; 
-} Resultados;
-
 int RepartirTrabajo() {
     TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
     int rank, size, posicion, costeOptimo = 9999999, coste;
@@ -105,15 +99,16 @@ int RepartirTrabajo() {
     TSolucionArboles Optimo;
 
     MPI_Init(NULL, NULL);
-    MPI_Comm_size(MPI_COMM comm, int &size);
-    MPI_Comm_rank(MPI_Comm comm, int &rank); 
+    MPI_Comm_rank( MPI_COMM_WORLD, &rank ); 
+	MPI_Comm_size( MPI_COMM_WORLD, &size ); 
     long trabajos = MaxCombinaciones/size;
 
     TCombinacionArboles inicio = rank*MaxCombinaciones;
     TCombinacionArboles final = (rank+1)*MaxCombinaciones-1;
 
-    Optimo = CalcularCombinacionOptima(inicio, final);
-    
+    int test = CalcularCombinacionOptima(inicio, final);
+    printf("%d", test);
+    /*
     if(rank == 0) {
         
         MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, &status);//TODO: do it with structs
@@ -136,15 +131,15 @@ int RepartirTrabajo() {
         MPI_Pack(&Optimo.Combinacion);
 
         MPI_Send(buff, posicion, MPI_PACKED, 1, 0, MPI_COMM_WORLD); //TODO: do it with structs
-    }
+    }*/
 
     MPI_Finalize();
-    return costeOptimo;
+    return test;
 }
 
 
 // Calcula la combinación óptima entre el rango de combinaciones PrimeraCombinacion-UltimaCombinacion.
-TSolucionArboles CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinacionArboles UltimaCombinacion)
+int CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinacionArboles UltimaCombinacion)
 {
     TListaArboles listaArbolesTalados;
 
@@ -161,7 +156,7 @@ TSolucionArboles CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacio
     MostrarInfoArbolesLista(Optimo.ArbolesTalados);
     printf("\n");
 
-	return Optimo;
+	return Optimo.Coste;
 }
 
 
