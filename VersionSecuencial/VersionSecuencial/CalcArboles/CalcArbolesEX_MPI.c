@@ -103,19 +103,21 @@ int RepartirTrabajo() {
     //printf("[Rank %d] %d | %d \n %s", &rank, &costeOptimo, &Optimo.Coste, &Optimo.Combinacion);
     
     if(rank == 0) {
-        //printf("[IF] %d", rank);
+        printf("[IF] %d", rank);
 
         costeOptimo = Optimo.Coste;
         //mejorCombinacion = Optimo.Combinacion;
 
         MPI_Status status;
-
-        MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, MPI_COMM_WORLD, &status);//TODO: do it with structs
-
+        printf("test1");
+        MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, MPI_COMM_WORLD, &status);//Problem
+        printf("jamon2");
         posicion = 0;
         for(int i = 0; i < size; i++) {
+            printf("test3");
             MPI_Unpack(buff, 1000, &posicion, &coste, 1, MPI_INT, MPI_COMM_WORLD);
-            //MPI_Unpack(buff, 1000, &posicion, &combinacion, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
+            printf("test4");
+            MPI_Unpack(buff, 1000, &posicion, &combinacion, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
 
             if (coste < costeOptimo)
             {
@@ -134,9 +136,8 @@ int RepartirTrabajo() {
 
     Optimo.Coste = costeOptimo;
     //Optimo.Combinacion = mejorCombinacion;
-
-    MPI_Finalize();
-    return Optimo.Coste;
+    printf("\ntest5");
+    return costeOptimo;
 }
 
 

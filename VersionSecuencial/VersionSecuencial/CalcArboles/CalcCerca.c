@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 
     // Comprobar que las soluciones de los dos métodos tengan el mismo coste
     if (ArbolesEntrada.NumArboles<32 && OptimoEX.Coste!=OptimoBB.Coste)
+        printf("EX=%d BB=%d\n", OptimoEX.Coste, OptimoBB.Coste);
         Error("[Main] Error soluciones exahustiva y branch&bound no coinciden.\n");
 
     // Generar fichero de resultado.
