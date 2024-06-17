@@ -11,6 +11,7 @@
 #include <mpi.h>
 
 // Variables Globales
+int rank;
 struct timespec start, finish;
 double elapsed_std;
 TCombinacionArboles Combinaciones;
@@ -34,8 +35,8 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
     elapsed_std = (finish.tv_sec - start.tv_sec);
     elapsed_std += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    memcpy(solucion,&Optimo,sizeof(TSolucionArboles));
-
+    if (rank == 0)
+        memcpy(solucion,&Optimo,sizeof(TSolucionArboles));
     printf("[CalcularCercaOptimaExhaustiva] Tiempo requerido cálculo cerca optima: %05.3f segs. %lu combinaciones evaluadas\n",elapsed_std, (unsigned long) Combinaciones);
 
     if (coste==DMaximoCoste)
@@ -85,61 +86,79 @@ void OrdenarArboles()
 }
 
 int RepartirTrabajo() {
-    TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
-    int rank, size, posicion, costeOptimo, coste;
-    TCombinacionArboles mejorCombinacion, combinacion;
-    char buff[1000];
+    int size, costeOptimo;
+    long trabajos;
+    TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles), inicio, final;
 
     MPI_Init(NULL, NULL);
     MPI_Comm_rank( MPI_COMM_WORLD, &rank ); 
 	MPI_Comm_size( MPI_COMM_WORLD, &size );
      
-    long trabajos = MaxCombinaciones/size;
+    trabajos = MaxCombinaciones/size;
 
-    TCombinacionArboles inicio = rank*trabajos;
-    TCombinacionArboles final = ((rank+1)*trabajos)-1;
-
-    costeOptimo = CalcularCombinacionOptima(inicio, final); // Optimo.Coste
-    //printf("[Rank %d] %d | %d \n %s", &rank, &costeOptimo, &Optimo.Coste, &Optimo.Combinacion);
-    
-    if(rank == 0) {
-        printf("[IF] %d", rank);
-
-        costeOptimo = Optimo.Coste;
-        //mejorCombinacion = Optimo.Combinacion;
-
-        MPI_Status status;
-        printf("test1");
-        MPI_Recv(buff, 1000 , MPI_PACKED, 0, 0, MPI_COMM_WORLD, &status);//Problem
-        printf("jamon2");
-        posicion = 0;
-        for(int i = 0; i < size; i++) {
-            printf("test3");
-            MPI_Unpack(buff, 1000, &posicion, &coste, 1, MPI_INT, MPI_COMM_WORLD);
-            printf("test4");
-            MPI_Unpack(buff, 1000, &posicion, &combinacion, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
-
-            if (coste < costeOptimo)
-            {
-                costeOptimo = coste;
-                //mejorCombinacion = combinacion;
-            }
-        }
-    } else {
-        //printf("[Rank %d] Sending...", rank);
-
-        posicion = 0;
-        MPI_Pack(&Optimo.Coste, 1, MPI_INT, buff, 110, &posicion, MPI_COMM_WORLD);
-        //MPI_Pack(&Optimo.Combinacion);
-        MPI_Send(buff, posicion, MPI_PACKED, 1, 0, MPI_COMM_WORLD); //TODO: do it with structs
+    inicio = rank*trabajos;
+    //If MaxCombinaciones%size!=0 means that the last combination to evaluate will be excluded
+    //By doing this we secure that we evaluate that combination and assign it to the last process
+    if (rank==size-1 && MaxCombinaciones%size != 0) {
+        final = ((rank+1)*trabajos);
+    }else{
+        final = ((rank+1)*trabajos)-1;
     }
 
-    Optimo.Coste = costeOptimo;
-    //Optimo.Combinacion = mejorCombinacion;
-    printf("\ntest5");
-    return costeOptimo;
+    //Returns optimal cost of the combinations assigned to them
+    //The information is stored in Global Variable Optima
+    costeOptimo = CalcularCombinacionOptima(inicio, final); 
+     //We recive the information and compare it to the optimal solution stored atm
+     //We send the struct of the optimal solution to the process with rank 0
+    TSolucionArboles recived;
+    if(rank == 0) {
+        for(int i=0; i<size-1; i++ ) {
+            recived = recv_unpack_optimo();
+            if(recived.Coste < Optimo.Coste) {
+                Optimo = recived;
+            }                      
+        }
+
+        return Optimo.Coste;
+    } else {
+        pack_send_optimo(Optimo);
+    }
+    MPI_Finalize();
+}
+void pack_send_optimo(TSolucionArboles solucion){
+    int position = 0, bufsize = 1000;
+    char buf[1000];
+    
+    MPI_Pack(&solucion.Combinacion, 1, MPI_UNSIGNED_LONG, buf, bufsize, &position, MPI_COMM_WORLD);
+    MPI_Pack(&solucion.ArbolesTalados.NumArboles, 1, MPI_INT, buf, bufsize, &position, MPI_COMM_WORLD);
+    MPI_Pack(solucion.ArbolesTalados.Arboles, solucion.ArbolesTalados.NumArboles, MPI_INT, buf, bufsize, &position, MPI_COMM_WORLD);
+    MPI_Pack(&solucion.Coste, 1, MPI_INT, buf, bufsize, &position, MPI_COMM_WORLD);
+    MPI_Pack(&solucion.CosteArbolesRestantes, 1, MPI_INT, buf, bufsize, &position, MPI_COMM_WORLD);
+    MPI_Pack(&solucion.LongitudCerca, 1, MPI_FLOAT, buf, bufsize, &position, MPI_COMM_WORLD);
+    MPI_Pack(&solucion.MaderaSobrante, 1, MPI_FLOAT, buf, bufsize, &position, MPI_COMM_WORLD);
+
+    MPI_Send(buf, position, MPI_PACKED, 0, 0, MPI_COMM_WORLD);
+
 }
 
+TSolucionArboles recv_unpack_optimo(){
+    int position = 0, bufsize = 1000;
+    char buf[1000];
+    MPI_Status status;
+    TSolucionArboles received_solucion;
+
+    MPI_Recv(buf, bufsize, MPI_PACKED, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
+
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.Combinacion, 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.ArbolesTalados.NumArboles, 1, MPI_INT, MPI_COMM_WORLD);
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.ArbolesTalados.Arboles, received_solucion.ArbolesTalados.NumArboles, MPI_INT, MPI_COMM_WORLD);
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.Coste, 1, MPI_INT, MPI_COMM_WORLD);
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.CosteArbolesRestantes, 1, MPI_INT, MPI_COMM_WORLD);
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.LongitudCerca, 1, MPI_FLOAT, MPI_COMM_WORLD);
+    MPI_Unpack(buf, bufsize, &position, &received_solucion.MaderaSobrante, 1, MPI_FLOAT, MPI_COMM_WORLD);
+
+    return received_solucion;
+}
 
 // Calcula la combinación óptima entre el rango de combinaciones PrimeraCombinacion-UltimaCombinacion.
 int CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinacionArboles UltimaCombinacion)

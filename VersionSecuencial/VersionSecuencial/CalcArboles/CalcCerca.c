@@ -24,14 +24,12 @@ int main(int argc, char *argv[])
     // Si #arboles<32 se calcula la cerca óptima con el método exhaustivo
     if (ArbolesEntrada.NumArboles<32 && !CalcularCercaOptimaExhaustiva(&OptimoEX))
         Error("[Main] Error CalcularCercaOptimaExhaustiva.\n");
-
     // Se calcula la cerca óptima con el método Branch & Baund con Backtracking
     if (!CalcularCercaOptimaBrandBound(&OptimoBB))
         Error("[Main] Error CalcularCercaOptimaBrandBound.\n");
 
     // Comprobar que las soluciones de los dos métodos tengan el mismo coste
     if (ArbolesEntrada.NumArboles<32 && OptimoEX.Coste!=OptimoBB.Coste)
-        printf("EX=%d BB=%d\n", OptimoEX.Coste, OptimoBB.Coste);
         Error("[Main] Error soluciones exahustiva y branch&bound no coinciden.\n");
 
     // Generar fichero de resultado.
@@ -41,7 +39,7 @@ int main(int argc, char *argv[])
             Error("[Main] Error GenerarFicheroSalida.\n");
 
         if (ArbolesEntrada.NumArboles>=32 && !GenerarFicheroSalida(OptimoBB, "./Cerca.res"))
-            Error("[Main] Error GenerarFicheroSalida.\n");
+           Error("[Main] Error GenerarFicheroSalida.\n");
     }
     else
     {

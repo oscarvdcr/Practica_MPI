@@ -14,8 +14,8 @@
 // Solución.
 struct SolucionArboles
 {
-    TCombinacionArboles Combinacion;
-    TListaArboles       ArbolesTalados;         // Arboles Talados.
+    TCombinacionArboles Combinacion;            //unsigned long
+    TListaArboles       ArbolesTalados;         // Arboles Talados. int, int[]
     int		            Coste;                  // Coste de los árboles cortados.
     int		            CosteArbolesRestantes;  // Coste de los árboles cercados.
     float		        LongitudCerca;          // Longitud cerca para rodear arboles que quedan.

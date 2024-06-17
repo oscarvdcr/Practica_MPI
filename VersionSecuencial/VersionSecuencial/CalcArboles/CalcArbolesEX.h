@@ -35,4 +35,8 @@ float CalcularDistancia(int x1, int y1, int x2, int y2);
 int CalcularMaderaArbolesTalados(TListaArboles listaArboles);
 void MostrarArboles(TSolucionArboles CombinacionArboles);
 
+int RepartirTrabajo();
+void pack_send_optimo(TSolucionArboles optimo);
+TSolucionArboles recv_unpack_optimo();
+
 #endif //CALCCERCA_CALCARBOLESEX_H
