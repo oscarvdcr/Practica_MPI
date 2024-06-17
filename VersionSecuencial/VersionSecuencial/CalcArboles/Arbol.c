@@ -1,10 +1,15 @@
-//
-// Created by Fernando Cores Prado on 9/4/24.
-//
+/* ---------------------------------------------------------------
+Práctica 1.
+Código fuente: Arbol.c
+Grau Informática
+49254458G van de Crommert Rodoreda, Òscar.
+48057785K Gonzàlez Saló, Marc
+--------------------------------------------------------------- */
 
 #include "Arbol.h"
 
 #include <stdio.h>
+#include <mpi.h>
 
 // Variables Globales:
 TBosque ArbolesEntrada;
@@ -15,7 +20,9 @@ TBosque ArbolesEntradaOrdenados;
 bool LeerFicheroEntrada(char *PathFicIn)
 {
     FILE *FicIn;
-    int a;
+    int a, rank;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     FicIn=fopen(PathFicIn,"r");
     if (FicIn==NULL)
@@ -23,7 +30,8 @@ bool LeerFicheroEntrada(char *PathFicIn)
         perror("Lectura Fichero entrada.");
         return false;
     }
-    printf("Datos Entrada:\n");
+    if(rank == 0)
+        printf("Datos Entrada:\n");
 
     // Leemos el nmero de arboles del bosque de entrada.
     if (fscanf(FicIn, "%d", &(ArbolesEntrada.NumArboles))<1)
@@ -31,7 +39,8 @@ bool LeerFicheroEntrada(char *PathFicIn)
         perror("Lectura arboles entrada");
         return false;
     }
-    printf("\tArboles: %d.\n",ArbolesEntrada.NumArboles);
+    if (rank == 0)
+        printf("\tArboles: %d.\n",ArbolesEntrada.NumArboles);
 
     // Leer atributos arboles.
     for(a=0;a<ArbolesEntrada.NumArboles;a++)
@@ -43,7 +52,8 @@ bool LeerFicheroEntrada(char *PathFicIn)
             perror("Lectura datos arbol.");
             return false;
         }
-        printf("\tArbol %d-> (%d,%d) Coste:%d, Long:%d.\n",a+1,ArbolesEntrada.Arboles[a].Coord.x, ArbolesEntrada.Arboles[a].Coord.y, ArbolesEntrada.Arboles[a].Valor, ArbolesEntrada.Arboles[a].Longitud);
+        if (rank == 0)
+            printf("\tArbol %d-> (%d,%d) Coste:%d, Long:%d.\n",a+1,ArbolesEntrada.Arboles[a].Coord.x, ArbolesEntrada.Arboles[a].Coord.y, ArbolesEntrada.Arboles[a].Valor, ArbolesEntrada.Arboles[a].Longitud);
     }
 
     return true;

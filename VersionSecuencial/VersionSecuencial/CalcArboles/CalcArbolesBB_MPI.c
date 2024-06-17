@@ -1,6 +1,10 @@
-//
-// Created by Fernando Cores Prado on 10/4/24.
-//
+/* ---------------------------------------------------------------
+Práctica 1.
+Código fuente: CalcArbolesBB_MPI.c
+Grau Informática
+49254458G van de Crommert Rodoreda, Òscar.
+48057785K Gonzàlez Saló, Marc
+--------------------------------------------------------------- */
 
 #include <stdio.h>
 #include <time.h>
@@ -35,7 +39,7 @@ int CalcularCercaOptimaBrandBound(PtrSolucionArboles solucion)
     Combinaciones=0;
 
     printf("\n[CalcularCercaOptimaBrandBound] Evaluación Combinaciones posibles: \n");
-    int coste = CalcularCercaOptimaBB(0, solucion);
+    CalcularCercaOptimaBB(0, solucion);
 
     clock_gettime(CLOCK_MONOTONIC, &finish);
     elapsed_std = (finish.tv_sec - start.tv_sec);

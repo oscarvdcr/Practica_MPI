@@ -1,6 +1,10 @@
-/*
-Authors: van de Crommert Rodoreda, Òscar && Gonzàlez Saló, Marc
-*/
+/* ---------------------------------------------------------------
+Práctica 1.
+Código fuente: CalcArbolesBB_MPI.c
+Grau Informática
+49254458G van de Crommert Rodoreda, Òscar.
+48057785K Gonzàlez Saló, Marc
+--------------------------------------------------------------- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -18,6 +22,7 @@ struct timespec start, finish;
 double elapsed_std;
 TCombinacionArboles Combinaciones;
 TSolucionArboles Optimo;
+TCombinacionArboles MaxCombinaciones;
 
 
 // Calcular cerca óptima mediante el método exhaustivo
@@ -31,10 +36,10 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 	/* Cálculo óptimo */
 	Optimo.ArbolesTalados.NumArboles = 0;
 	Optimo.Coste = DMaximoCoste;
-    //Versió Paral·lela
+    //Versió Paral·lela mpiexec -n 4 ./CalcCercaMPI ConjuntoPruevas/EjemploGrande1_25arboles.dat
 	int coste = RepartirTrabajo();
-
-    //Versió iterativa
+    
+    //Versió iterativa ./CalcCercaMPI ConjuntoPruevas/EjemploGrande1_25arboles.dat
     //TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles), inicio, final;
     //int coste = CalcularCombinacionOptima(0,MaxCombinaciones);
 
@@ -42,10 +47,10 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
     elapsed_std = (finish.tv_sec - start.tv_sec);
     elapsed_std += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    if (rank == 0)
+    if (rank == 0){
         memcpy(solucion,&Optimo,sizeof(TSolucionArboles));
-    printf("[CalcularCercaOptimaExhaustiva] Tiempo requerido cálculo cerca optima: %05.3f segs. %lu combinaciones evaluadas\n",elapsed_std, (unsigned long) Combinaciones);
-
+        printf("\n[CalcularCercaOptimaExhaustiva] Tiempo requerido cálculo cerca optima: %05.3f segs. %lu combinaciones evaluadas\n",elapsed_std, MaxCombinaciones);
+    }
     if (coste==DMaximoCoste)
         return false;
     else
@@ -94,12 +99,12 @@ void OrdenarArboles()
 
 int RepartirTrabajo() {
     long trabajos;
-    TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles), inicio, final;
+    MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles);
+    TCombinacionArboles inicio, final;
 
-    MPI_Init(NULL, NULL);
     MPI_Comm_rank( MPI_COMM_WORLD, &rank ); 
 	MPI_Comm_size( MPI_COMM_WORLD, &size );
-     
+
     trabajos = MaxCombinaciones/size;
 
     inicio = rank*trabajos;
@@ -111,8 +116,10 @@ int RepartirTrabajo() {
         final = ((rank+1)*trabajos)-1;
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);//To print correctly the entry data
+    
     //Returns optimal cost of the combinations assigned to them
-    //The information is stored in Global Variable Optima
+    //The information is stored in Global Variable Optima    
     CalcularCombinacionOptima(inicio, final); 
      //We recive the information and compare it to the optimal solution stored atm
      //We send the struct of the optimal solution to the process with rank 0
@@ -124,12 +131,10 @@ int RepartirTrabajo() {
                 Optimo = recived;
             }                      
         }
-
         return Optimo.Coste;
     } else {
         pack_send_optimo(Optimo);
     }
-    MPI_Finalize();
 }
 void pack_send_optimo(TSolucionArboles solucion){
     int position = 0, bufsize = 1000;
@@ -170,8 +175,8 @@ TSolucionArboles recv_unpack_optimo(){
 int CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinacionArboles UltimaCombinacion)
 {
     TListaArboles listaArbolesTalados;
-
-  	printf("\n[CalcularCercaOptimaExhaustiva] Evaluación Combinaciones posibles: \n");
+    if (rank == 0)
+  	    printf("\n[CalcularCercaOptimaExhaustiva] Evaluación Combinaciones posibles: \n");
 	for (Combinaciones=PrimeraCombinacion; Combinaciones<UltimaCombinacion; Combinaciones++)
 	{
    	    if (DShowAllCombinations) printf("\tC%lu -> \t",(unsigned long) Combinaciones);
@@ -179,12 +184,8 @@ int CalcularCombinacionOptima(TCombinacionArboles PrimeraCombinacion, TCombinaci
 	}
 
     ConvertirCombinacionToArbolesTalados(Optimo.Combinacion, &listaArbolesTalados);
-    printf("\r\tOptimo %lu-> Coste %d, %d Arboles talados:", (long int) Optimo.Combinacion, Optimo.Coste, Optimo.ArbolesTalados.NumArboles);
-    MostrarArboles(Optimo);
-    MostrarInfoArbolesLista(Optimo.ArbolesTalados);
-    printf("\n");
-
-	return Optimo.Coste;
+    MPI_Barrier(MPI_COMM_WORLD);
+    return Optimo.Coste;
 }
 
 
@@ -223,12 +224,10 @@ int CalcularCosteCerca(PtrSolucionArboles solucion) {
     solucion->CosteArbolesRestantes = valor_arboles;
     solucion->LongitudCerca = longitudCerca;
     solucion->MaderaSobrante = maderaArbolesTalados - solucion->LongitudCerca;
-
     if (DShowAllCombinations) printf("\tC%lu -> \t", (long int) solucion->Combinacion);
     if (DShowAllCombinations) printf(" %d arboles cortados: ", listaArbolesTalados.NumArboles);
     if (DShowAllCombinations) MostrarArbolesLista(listaArbolesTalados);
     if (DShowAllCombinations) printf("  Madera:%d  \tCerca:%4.2f ", maderaArbolesTalados, longitudCerca);
-
     if (longitudCerca >
         maderaArbolesTalados) {   // Los arboles cortados no tienen suficiente madera para construir la cerca.
         solucion->Coste = DMaximoCoste;

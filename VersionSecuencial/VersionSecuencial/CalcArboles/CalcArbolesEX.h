@@ -1,6 +1,10 @@
-//
-// Created by Fernando Cores Prado on 10/4/24.
-//
+/* ---------------------------------------------------------------
+Práctica 1.
+Código fuente: CalcArboles.h
+Grau Informática
+49254458G van de Crommert Rodoreda, Òscar.
+48057785K Gonzàlez Saló, Marc
+--------------------------------------------------------------- */
 
 #ifndef CALCCERCA_CALCARBOLESEX_H
 #define CALCCERCA_CALCARBOLESEX_H

@@ -4,6 +4,13 @@
 # 'make'        build executable file 'mycc'
 # 'make clean'  removes all .o and executable files
 #
+#/* ---------------------------------------------------------------
+#Práctica 1.
+#Código fuente: makefile
+#Grau Informática
+#49254458G van de Crommert Rodoreda, Òscar.
+#48057785K Gonzàlez Saló, Marc
+#--------------------------------------------------------------- */
 
 # define the C compiler to use
 CC = mpicc
@@ -25,7 +32,7 @@ LFLAGS =
 LIBS = -lm
 
 # define the C source files
-SRCS = Arbol.c  CalcArbolesBB.c CalcCerca.c  ConvexHull.c  Solucion.c  Utils.c CalcArbolesEX_MPI.c
+SRCS = Arbol.c  CalcArbolesBB_MPI.c CalcCerca.c  ConvexHull.c  Solucion.c  Utils.c CalcArbolesEX_MPI.c
 
 # define the C object files 
 #
