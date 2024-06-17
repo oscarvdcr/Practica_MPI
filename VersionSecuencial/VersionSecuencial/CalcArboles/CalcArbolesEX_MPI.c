@@ -1,4 +1,6 @@
-
+/*
+Authors: van de Crommert Rodoreda, Òscar && Gonzàlez Saló, Marc
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -11,7 +13,7 @@
 #include <mpi.h>
 
 // Variables Globales
-int rank;
+int rank, size;
 struct timespec start, finish;
 double elapsed_std;
 TCombinacionArboles Combinaciones;
@@ -29,7 +31,12 @@ bool CalcularCercaOptimaExhaustiva(PtrSolucionArboles solucion)
 	/* Cálculo óptimo */
 	Optimo.ArbolesTalados.NumArboles = 0;
 	Optimo.Coste = DMaximoCoste;
+    //Versió Paral·lela
 	int coste = RepartirTrabajo();
+
+    //Versió iterativa
+    //TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles), inicio, final;
+    //int coste = CalcularCombinacionOptima(0,MaxCombinaciones);
 
     clock_gettime(CLOCK_MONOTONIC, &finish);
     elapsed_std = (finish.tv_sec - start.tv_sec);
@@ -86,7 +93,6 @@ void OrdenarArboles()
 }
 
 int RepartirTrabajo() {
-    int size, costeOptimo;
     long trabajos;
     TCombinacionArboles MaxCombinaciones = (int) pow(2.0,ArbolesEntrada.NumArboles), inicio, final;
 
@@ -107,7 +113,7 @@ int RepartirTrabajo() {
 
     //Returns optimal cost of the combinations assigned to them
     //The information is stored in Global Variable Optima
-    costeOptimo = CalcularCombinacionOptima(inicio, final); 
+    CalcularCombinacionOptima(inicio, final); 
      //We recive the information and compare it to the optimal solution stored atm
      //We send the struct of the optimal solution to the process with rank 0
     TSolucionArboles recived;
